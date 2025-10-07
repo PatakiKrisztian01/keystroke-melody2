@@ -1,0 +1,30 @@
+name: Build EXE
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pyinstaller
+
+      - name: Build EXE
+        run: pyinstaller --onefile --noconsole keystroke_melody.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: keystroke_melody_exe
+          path: dist/keystroke_melody.exe
